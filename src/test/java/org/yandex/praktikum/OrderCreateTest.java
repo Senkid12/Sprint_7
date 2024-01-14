@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yandex.praktikum.model.order.Order;
 import org.yandex.praktikum.service.OrderGenerator;
 
@@ -20,7 +18,6 @@ import static org.yandex.praktikum.constants.Endpoints.endpointForCreateOrder;
 
 @RunWith(Parameterized.class)
 public class OrderCreateTest {
-    Logger logger = LoggerFactory.getLogger(OrderCreateTest.class);
     private final String firstName;
     private final String lastName;
     private final String address;

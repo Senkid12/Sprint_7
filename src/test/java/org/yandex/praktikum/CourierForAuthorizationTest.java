@@ -96,16 +96,4 @@ public class CourierForAuthorizationTest {
                         .post(endpointForCourierAuthorization);
         return response;
     }
-
-    @Step("Авторизация курьера без поля password")
-    public Response authorizationCourierWithoutPassword(Courier courier) {
-        Response response =
-                given()
-                        .header("Content-type", "application/json")
-                        .body(courier)
-                        .when()
-                        .post(endpointForCourierAuthorization);
-        return response;
-    }
-
 }
