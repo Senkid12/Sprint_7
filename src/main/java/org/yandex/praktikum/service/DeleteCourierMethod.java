@@ -3,13 +3,12 @@ package org.yandex.praktikum.service;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.yandex.praktikum.model.courier.courierCreate.Courier;
-import org.yandex.praktikum.model.courier.courierForAuthorization.CourierForAuthorization;
 
 import static io.restassured.RestAssured.given;
 
 public class DeleteCourierMethod {
-    public Integer getCourierId (Courier courier){
-        CourierForAuthorization courierForAuthorization = new CourierForAuthorizationGenerator().getCourierForAuthorization(courier);
+    public Integer getCourierId(Courier courier) {
+        Courier courierForAuthorization = new CourierForAuthorizationGenerator().getCourierForAuthorization(courier);
         Response response = authorizationCourier(courierForAuthorization);
         return response.body().path("id");
     }
@@ -20,7 +19,7 @@ public class DeleteCourierMethod {
     }
 
     @Step("Авторизация курьера")
-    public Response authorizationCourier(CourierForAuthorization courier) {
+    public Response authorizationCourier(Courier courier) {
         Response response =
                 given()
                         .header("Content-type", "application/json")

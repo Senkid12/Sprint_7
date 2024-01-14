@@ -4,6 +4,7 @@ import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.yandex.praktikum.service.OrderGenerator;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.yandex.praktikum.constants.Endpoints.endpointForCreateOrder;
 
 @RunWith(Parameterized.class)
 public class OrderCreateTest {
@@ -42,6 +44,7 @@ public class OrderCreateTest {
         this.comment = comment;
         this.color = color;
     }
+
     @Parameterized.Parameters
     public static Object[][] getOrders() {
         return new Object[][]{
@@ -57,8 +60,6 @@ public class OrderCreateTest {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
-    // Подумал может есть какой-то способ как-то правильней выводить информацию с теста
-    // (думаю что sout не используются в тестах), буду благодарен за подсказку как это грамотней сделать)
     @Test
     @DisplayName("Создание заказа")
     public void createOrder() {
@@ -68,7 +69,7 @@ public class OrderCreateTest {
         System.out.println("Ответ от сервера: " + response.body().asString());
         trackId = response.body().path("track");
         System.out.println("Заказ с id " + trackId + " создан");
-        response.then().assertThat().body("track", notNullValue()).and().statusCode(201) ;
+        response.then().statusCode(HttpStatus.SC_CREATED).and().assertThat().body("track", notNullValue()).and().statusCode(201);
     }
 
     @Step("Создание заказа")
@@ -77,7 +78,7 @@ public class OrderCreateTest {
                 given()
                         .body(order)
                         .when()
-                        .post("/api/v1/orders");
+                        .post(endpointForCreateOrder);
         return response;
     }
 }

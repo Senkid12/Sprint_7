@@ -1,32 +1,32 @@
 package org.yandex.praktikum.service;
 
 import org.yandex.praktikum.model.courier.courierCreate.Courier;
-import org.yandex.praktikum.model.courier.courierForAuthorization.CourierForAuthorization;
-import org.yandex.praktikum.model.courier.courierForAuthorization.CourierForAuthorizationWithoutLogin;
-import org.yandex.praktikum.model.courier.courierForAuthorization.CourierForAuthorizationWithoutPassword;
 
 public class CourierForAuthorizationGenerator {
-    public CourierForAuthorization getCourierForAuthorization(Courier courier) {
-        return new CourierForAuthorization(courier.getLogin(), courier.getPassword());
+    public Courier getCourierForAuthorization(Courier courier) {
+        return Courier.builder()
+                .login(courier.getLogin())
+                .password(courier.getPassword())
+                .build();
     }
 
-    public CourierForAuthorizationWithoutLogin getCourierForAuthorizationWithoutLogin(Courier courier) {
-        return new CourierForAuthorizationWithoutLogin(courier);
+    public Courier getCourierForAuthorizationWithoutLogin(Courier courier) {
+        return Courier.builder()
+                .password(courier.getPassword())
+                .build();
     }
 
-    public CourierForAuthorizationWithoutPassword getCourierForAuthorizationWithoutPassword(Courier courier) {
-        return new CourierForAuthorizationWithoutPassword(courier);
+    public Courier getCourierForAuthorizationWithLoginNull(Courier courier){
+        return Courier.builder()
+                .login(null)
+                .password(courier.getPassword())
+                .build();
     }
 
-    public CourierForAuthorization getCourierForAuthorizationWithLoginNull(Courier courier){
-        CourierForAuthorization courierForAuthorization = new CourierForAuthorization();
-        courierForAuthorization.setPassword(courier.getPassword());
-        return courierForAuthorization;
-    }
-
-    public CourierForAuthorization getCourierForAuthorizationWithPasswordNull(Courier courier){
-        CourierForAuthorization courierForAuthorization = new CourierForAuthorization();
-        courierForAuthorization.setLogin(courier.getLogin());
-        return courierForAuthorization;
+    public Courier getCourierForAuthorizationWithPasswordNull(Courier courier){
+        return Courier.builder()
+                .login(courier.getLogin())
+                .password("")
+                .build();
     }
 }

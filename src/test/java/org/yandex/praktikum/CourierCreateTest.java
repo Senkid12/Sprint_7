@@ -4,18 +4,17 @@ import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.yandex.praktikum.model.courier.courierCreate.Courier;
-import org.yandex.praktikum.model.courier.courierCreate.CourierWithoutLogin;
-import org.yandex.praktikum.model.courier.courierCreate.CourierWithoutName;
-import org.yandex.praktikum.model.courier.courierCreate.CourierWithoutPassword;
 import org.yandex.praktikum.service.CourierGenerator;
 import org.yandex.praktikum.service.DeleteCourierMethod;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.yandex.praktikum.constants.Endpoints.endpointForCreateCourier;
 
 public class CourierCreateTest {
     public final CourierGenerator courierGenerator = new CourierGenerator();
@@ -27,14 +26,12 @@ public class CourierCreateTest {
         RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru";
     }
 
-    // Подумал может есть какой-то способ как-то правильней выводить информацию с теста
-    // (думаю что sout не используются в тестах), буду благодарен за подсказку как это грамотней сделать)
     @Test
     @DisplayName("Создание курьера с тремя параметрами (логин, пароль, имя)")
     public void createCourier() {
         Response response = create(courierGenerator.getCourier());
         System.out.println("Ответ с сервера " + response.body().asString());
-        response.then().assertThat().body("ok", equalTo(true));
+        response.then().statusCode(HttpStatus.SC_CREATED).and().assertThat().body("ok", equalTo(true));
     }
 
     @Test
@@ -48,15 +45,16 @@ public class CourierCreateTest {
         // (В запросе с повторяющимся логином в ключе 'message' - значение 'Этот логин уже используется',
         // а по факту 'Этот логин уже используется. Попробуйте другой.')
         System.out.println("Ответ с сервера " + response1.body().asString());
-        response1.then().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
+        response1.then().statusCode(HttpStatus.SC_CONFLICT).and().assertThat().body("message", equalTo("Этот логин уже используется. Попробуйте другой."));
     }
 
     @Test
     @DisplayName("Создание курьера без поля с паролем")
     public void createCourierWithoutPassword() {
+        //Courier courierWithoutPassword = courierGenerator.getCourierWithoutPassword();
         Response response = createWithoutPassword(courierGenerator.getCourierWithoutPassword());
         System.out.println("Ответ с сервера " + response.body().asString());
-        response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
+        response.then().statusCode(HttpStatus.SC_BAD_REQUEST).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 
     @Test
@@ -64,7 +62,7 @@ public class CourierCreateTest {
     public void createCourierWithoutLogin() {
         Response response = createWithoutLogin(courierGenerator.getCourierWithoutLogin());
         System.out.println("Ответ с сервера " + response.body().asString());
-        response.then().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
+        response.then().statusCode(HttpStatus.SC_BAD_REQUEST).and().assertThat().body("message", equalTo("Недостаточно данных для создания учетной записи"));
     }
 
     @Test
@@ -72,7 +70,7 @@ public class CourierCreateTest {
     public void createCourierWithoutName() {
         Response response = createWithoutName(courierGenerator.getCourierWithoutName());
         System.out.println("Ответ с сервера " + response.body().asString());
-        response.then().assertThat().body("ok", equalTo(true));
+        response.then().statusCode(HttpStatus.SC_CREATED).and().assertThat().body("ok", equalTo(true));
     }
 
     @After
@@ -91,41 +89,41 @@ public class CourierCreateTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post("/api/v1/courier");
+                        .post(endpointForCreateCourier);
         return response;
     }
 
     @Step("Создание курьера без поля password")
-    public Response createWithoutPassword(CourierWithoutPassword courierWithoutPassword) {
+    public Response createWithoutPassword(Courier courier) {
         Response response =
                 given()
                         .header("Content-type", "application/json")
-                        .body(courierWithoutPassword)
+                        .body(courier)
                         .when()
-                        .post("/api/v1/courier");
+                        .post(endpointForCreateCourier);
         return response;
     }
 
     @Step("Создание курьера без поля login")
-    public Response createWithoutLogin(CourierWithoutLogin courierWithoutLogin) {
+    public Response createWithoutLogin(Courier courier) {
         Response response =
                 given()
                         .header("Content-type", "application/json")
-                        .body(courierWithoutLogin)
+                        .body(courier)
                         .when()
-                        .post("/api/v1/courier");
+                        .post(endpointForCreateCourier);
 
         return response;
     }
 
     @Step("Создание курьера без поля firstName")
-    public Response createWithoutName (CourierWithoutName courierWithoutName) {
+    public Response createWithoutName (Courier courier) {
         Response response =
                 given()
                         .header("Content-type", "application/json")
-                        .body(courierWithoutName)
+                        .body(courier)
                         .when()
-                        .post("/api/v1/courier");
+                        .post(endpointForCreateCourier);
         return response;
     }
 //    @Step("Удаление курьера")
