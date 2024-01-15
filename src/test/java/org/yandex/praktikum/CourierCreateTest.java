@@ -14,7 +14,7 @@ import org.yandex.praktikum.service.DeleteCourierMethod;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.yandex.praktikum.constants.Endpoints.endpointForCreateCourier;
+import static org.yandex.praktikum.constants.Endpoints.END_POINT_FOR_CREATE_COURIER;
 
 public class CourierCreateTest {
     public final CourierGenerator courierGenerator = new CourierGenerator();
@@ -89,7 +89,7 @@ public class CourierCreateTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCreateCourier);
+                        .post(END_POINT_FOR_CREATE_COURIER);
         return response;
     }
 
@@ -100,7 +100,7 @@ public class CourierCreateTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCreateCourier);
+                        .post(END_POINT_FOR_CREATE_COURIER);
         return response;
     }
 
@@ -111,27 +111,19 @@ public class CourierCreateTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCreateCourier);
+                        .post(END_POINT_FOR_CREATE_COURIER);
 
         return response;
     }
 
     @Step("Создание курьера без поля firstName")
-    public Response createWithoutName (Courier courier) {
+    public Response createWithoutName(Courier courier) {
         Response response =
                 given()
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCreateCourier);
+                        .post(END_POINT_FOR_CREATE_COURIER);
         return response;
     }
-//    @Step("Удаление курьера")
-//    public Response deleteCourier(Integer courierId) {
-//        Response response =
-//                given()
-//                        .delete("/api/v1/courier/" + String.format("%d", courierId));
-//        return response;
-//    }
-
 }

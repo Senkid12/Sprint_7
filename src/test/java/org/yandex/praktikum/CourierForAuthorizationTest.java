@@ -5,20 +5,24 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.yandex.praktikum.model.courier.courierCreate.Courier;
 import org.yandex.praktikum.service.CourierForAuthorizationGenerator;
 import org.yandex.praktikum.service.CourierGenerator;
+import org.yandex.praktikum.service.DeleteCourierMethod;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-import static org.yandex.praktikum.constants.Endpoints.endpointForCourierAuthorization;
-import static org.yandex.praktikum.constants.Endpoints.endpointForCreateCourier;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.yandex.praktikum.constants.Endpoints.END_POINT_FOR_COURIER_AUTHORIZATION;
+import static org.yandex.praktikum.constants.Endpoints.END_POINT_FOR_CREATE_COURIER;
 
 public class CourierForAuthorizationTest {
     private final CourierForAuthorizationGenerator courierForAuthorizationGenerator = new CourierForAuthorizationGenerator();
     private final CourierGenerator courierGenerator = new CourierGenerator();
+    private final DeleteCourierMethod deleteCourierMethod = new DeleteCourierMethod();
     private Courier courier;
 
     @Before
@@ -64,6 +68,14 @@ public class CourierForAuthorizationTest {
         response.then().assertThat().body("message", equalTo("Недостаточно данных для входа"));
     }
 
+    @After
+    @DisplayName("Удаление курьера")
+    public void deleteCourier() {
+        if (courier != null) {
+            deleteCourierMethod.deleteCourier(courier);
+        }
+    }
+
     @Step("Создание курьера")
     public Response create(Courier courier) {
         Response response =
@@ -71,7 +83,7 @@ public class CourierForAuthorizationTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCreateCourier);
+                        .post(END_POINT_FOR_CREATE_COURIER);
         return response;
     }
 
@@ -82,7 +94,7 @@ public class CourierForAuthorizationTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCourierAuthorization);
+                        .post(END_POINT_FOR_COURIER_AUTHORIZATION);
         return response;
     }
 
@@ -93,7 +105,7 @@ public class CourierForAuthorizationTest {
                         .header("Content-type", "application/json")
                         .body(courier)
                         .when()
-                        .post(endpointForCourierAuthorization);
+                        .post(END_POINT_FOR_COURIER_AUTHORIZATION);
         return response;
     }
 }

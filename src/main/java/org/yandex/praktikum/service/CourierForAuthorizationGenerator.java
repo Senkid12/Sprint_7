@@ -16,14 +16,14 @@ public class CourierForAuthorizationGenerator {
                 .build();
     }
 
-    public Courier getCourierForAuthorizationWithLoginNull(Courier courier){
+    public Courier getCourierForAuthorizationWithLoginNull(Courier courier) {
         return Courier.builder()
                 .login(null)
                 .password(courier.getPassword())
                 .build();
     }
 
-    public Courier getCourierForAuthorizationWithPasswordNull(Courier courier){
+    public Courier getCourierForAuthorizationWithPasswordNull(Courier courier) {
         return Courier.builder()
                 .login(courier.getLogin())
                 .password("")

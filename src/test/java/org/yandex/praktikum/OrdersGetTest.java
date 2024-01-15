@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.yandex.praktikum.constants.Endpoints.endpointForCreateOrder;
+import static org.yandex.praktikum.constants.Endpoints.END_POINT_FOR_CREATE_ORDER;
 
 public class OrdersGetTest {
     @Before
@@ -30,7 +30,7 @@ public class OrdersGetTest {
     public Response getOrders() {
         Response response =
                 given()
-                        .get(endpointForCreateOrder);
+                        .get(END_POINT_FOR_CREATE_ORDER);
         return response;
     }
 

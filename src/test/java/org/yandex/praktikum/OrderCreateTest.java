@@ -14,7 +14,7 @@ import org.yandex.praktikum.service.OrderGenerator;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.yandex.praktikum.constants.Endpoints.endpointForCreateOrder;
+import static org.yandex.praktikum.constants.Endpoints.END_POINT_FOR_CREATE_ORDER;
 
 @RunWith(Parameterized.class)
 public class OrderCreateTest {
@@ -75,7 +75,7 @@ public class OrderCreateTest {
                 given()
                         .body(order)
                         .when()
-                        .post(endpointForCreateOrder);
+                        .post(END_POINT_FOR_CREATE_ORDER);
         return response;
     }
 }
